@@ -1,49 +1,46 @@
 package com.example.gpayapp;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
+import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class SignupActivity extends AppCompatActivity {
 
-    EditText etName, etEmail, etPass, etPass2;
+    EditText etEmail, etPassword;
+    Button btnSignup;
+    FirebaseAuth auth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
 
-        etName  = findViewById(R.id.etName);
         etEmail = findViewById(R.id.etEmail);
-        etPass  = findViewById(R.id.etPass);
-        etPass2 = findViewById(R.id.etPass2);
+        etPassword = findViewById(R.id.etPassword);
+        btnSignup = findViewById(R.id.btnSignup);
 
-        Button btn = findViewById(R.id.btnSignup);
+        auth = FirebaseAuth.getInstance();
 
-        btn.setOnClickListener(v -> {
-
-            String name = etName.getText().toString();
+        btnSignup.setOnClickListener(v -> {
             String email = etEmail.getText().toString();
-            String pass = etPass.getText().toString();
-            String pass2 = etPass2.getText().toString();
+            String pass = etPassword.getText().toString();
 
-            // Validation
-            if (name.isEmpty() || email.isEmpty() || pass.isEmpty() || pass2.isEmpty()) {
-                Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
-                return;
-            }
+            auth.createUserWithEmailAndPassword(email, pass)
+                    .addOnSuccessListener(result -> {
+                        String uid = auth.getCurrentUser().getUid();
 
-            if (!pass.equals(pass2)) {
-                Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show();
-                return;
-            }
+                        FirebaseDatabase.getInstance().getReference("users")
 
-            // Move to login screen
-            Intent i = new Intent(SignupActivity.this, LoginActivity.class);
-            startActivity(i);
+                                .child(uid)
+                                .setValue(new com.example.gpayapp.User(email, 0));
+
+                        Toast.makeText(this, "Signup Successful", Toast.LENGTH_SHORT).show();
+                        finish();
+                    })
+                    .addOnFailureListener(e ->
+                            Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show());
         });
     }
 }
