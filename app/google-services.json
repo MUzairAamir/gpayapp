@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "918847000984",
+    "project_id": "googpay",
+    "storage_bucket": "googpay.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:918847000984:android:7013d9b62dbfe54390dbed",
+        "android_client_info": {
+          "package_name": "com.example.gpayapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDkf0QwIf9IZxE-x7uHsMt1mtzR7cJGJx8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
