@@ -2,27 +2,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/nav_home"
-        android:title="Home"
-        android:icon="@android:drawable/ic_menu_view"/>
+        android:id="@+id/menu_dashboard"
+        android:title="Dashboard"/>
 
     <item
-        android:id="@+id/nav_add_money"
-        android:title="Add Money"
-        android:icon="@android:drawable/ic_input_add"/>
+        android:id="@+id/menu_profile"
+        android:title="Profile"/>
 
     <item
-        android:id="@+id/nav_send_money"
-        android:title="Send Money"
-        android:icon="@android:drawable/ic_menu_send"/>
+        android:id="@+id/menu_logout"
+        android:title="Logout"/>
 
-    <item
-        android:id="@+id/nav_profile"
-        android:title="Profile"
-        android:icon="@android:drawable/ic_menu_myplaces"/>
-
-    <item
-        android:id="@+id/nav_logout"
-        android:title="Logout"
-        android:icon="@android:drawable/ic_lock_power_off"/>
 </menu>

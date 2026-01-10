@@ -1,55 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:background="#F1F3F4"
-    android:padding="20dp"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/tvBalance"
-        android:text="Current Balance: PKR 0"
-        android:textColor="#000000"
-        android:textSize="20sp"
-        android:layout_marginBottom="30dp"
-        android:textStyle="bold"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <Button
-        android:id="@+id/btnAddMoney"
-        android:text="Add Money"
-        android:layout_width="match_parent"
-        android:background="#4285F4"
-        android:textColor="#FFFFFF"
-        android:padding="15dp"
-        android:layout_marginBottom="20dp"
-        android:layout_height="wrap_content" />
-
-    <Button
-        android:id="@+id/btnSendMoney"
-        android:text="Send Money"
-        android:layout_width="match_parent"
-        android:background="#34A853"
-        android:textColor="#FFFFFF"
-        android:padding="15dp"
-        android:layout_marginBottom="20dp"
-        android:layout_height="wrap_content" />
-
-    <Button
-        android:id="@+id/btnTransactions"
-        android:text="Transactions"
-        android:layout_width="match_parent"
-        android:background="#FBBC05"
-        android:textColor="#000000"
-        android:padding="15dp"
-        android:layout_height="wrap_content" />
-    <Button
-        android:id="@+id/btnQRScan"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Scan QR Code"
-        android:layout_marginTop="12dp"/>
+        android:orientation="vertical"
+        android:padding="20dp"
+        android:gravity="center_horizontal">
 
-</LinearLayout>
+        <!-- Balance -->
+        <TextView
+            android:id="@+id/tvBalance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Current Balance: PKR 0"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="20dp"/>
+
+        <!-- Add Money -->
+        <Button
+            android:id="@+id/btnAddMoney"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Add Money"/>
+
+        <!-- Send Money -->
+        <Button
+            android:id="@+id/btnSendMoney"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Send Money"
+            android:layout_marginTop="10dp"/>
+
+        <!-- Transactions -->
+        <Button
+            android:id="@+id/btnTransactions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Transactions"
+            android:layout_marginTop="10dp"/>
+
+        <!-- Utility Bills -->
+        <Button
+            android:id="@+id/btnUtility"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Utility Bills"
+            android:layout_marginTop="10dp"/>
+
+        <!-- QR Scan -->
+        <Button
+            android:id="@+id/btnQRScan"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Scan QR Code"
+            android:layout_marginTop="10dp"/>
+
+    </LinearLayout>
+</ScrollView>

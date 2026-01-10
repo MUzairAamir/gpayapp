@@ -10,6 +10,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class SignupActivity extends AppCompatActivity {
 
@@ -61,6 +62,14 @@ public class SignupActivity extends AppCompatActivity {
                         Toast.makeText(this,
                                 "Account created successfully",
                                 Toast.LENGTH_SHORT).show();
+                        FirebaseAuth auth = FirebaseAuth.getInstance();
+                        String uid = auth.getCurrentUser().getUid();
+
+                        FirebaseDatabase.getInstance()
+                                .getReference("users")
+                                .child(uid)
+                                .child("balance")
+                                .setValue(0);
 
                         // Go to Login screen
                         startActivity(new Intent(SignupActivity.this, LoginActivity.class));

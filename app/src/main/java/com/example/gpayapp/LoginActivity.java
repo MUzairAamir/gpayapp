@@ -2,60 +2,69 @@ package com.example.gpayapp;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.*;
-import androidx.appcompat.app.AppCompatActivity;
-import com.google.firebase.auth.FirebaseAuth;
+import android.text.TextUtils;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
-import com.example.gpayapp.MainDrawerActivity;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.firebase.auth.FirebaseAuth;
 
 public class LoginActivity extends AppCompatActivity {
 
     EditText etEmail, etPassword;
     Button btnLogin;
+    TextView tvSignup;
+
+    FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        mAuth = FirebaseAuth.getInstance();
+
         etEmail = findViewById(R.id.etEmail);
         etPassword = findViewById(R.id.etPassword);
         btnLogin = findViewById(R.id.btnLogin);
-        TextView tvForgot = findViewById(R.id.tvForgotPassword);
+        tvSignup = findViewById(R.id.tvSignup);
 
-        tvForgot.setOnClickListener(v -> {
-            String email = etEmail.getText().toString().trim();
+        // ✅ LOGIN
+        btnLogin.setOnClickListener(v -> loginUser());
 
-            if (email.isEmpty()) {
-                Toast.makeText(this, "Enter your email first", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            FirebaseAuth.getInstance()
-                    .sendPasswordResetEmail(email)
-                    .addOnSuccessListener(aVoid ->
-                            Toast.makeText(this,
-                                    "Reset link sent to email",
-                                    Toast.LENGTH_LONG).show())
-                    .addOnFailureListener(e ->
-                            Toast.makeText(this,
-                                    e.getMessage(),
-                                    Toast.LENGTH_LONG).show());
+        // ✅ SIGNUP LINK (THIS WAS MISSING)
+        tvSignup.setOnClickListener(v -> {
+            startActivity(new Intent(LoginActivity.this, SignupActivity.class));
         });
+    }
 
-        btnLogin.setOnClickListener(v -> {
-            FirebaseAuth.getInstance()
-                    .signInWithEmailAndPassword(
-                            etEmail.getText().toString(),
-                            etPassword.getText().toString()
-                    )
-                    .addOnSuccessListener(authResult -> {
-                        startActivity(new Intent(this, MainDrawerActivity.class));
+    private void loginUser() {
+
+        String email = etEmail.getText().toString().trim();
+        String password = etPassword.getText().toString().trim();
+
+        if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
+            Toast.makeText(this, "Enter email & password", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        mAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+
+                        Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show();
+
+                        startActivity(new Intent(LoginActivity.this, MainDrawerActivity.class));
                         finish();
-                    })
-                    .addOnFailureListener(e ->
-                            Toast.makeText(this, "Invalid Credentials", Toast.LENGTH_SHORT).show());
-        });
+
+                    } else {
+                        Toast.makeText(this,
+                                "Login Failed: " + task.getException().getMessage(),
+                                Toast.LENGTH_LONG).show();
+                    }
+                });
     }
 }

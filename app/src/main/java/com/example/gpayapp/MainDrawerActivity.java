@@ -2,38 +2,62 @@ package com.example.gpayapp;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.MenuItem;
-import androidx.annotation.NonNull;
+
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 
-public class MainDrawerActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class MainDrawerActivity extends AppCompatActivity {
+
+    DrawerLayout drawerLayout;
+    NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_drawer);
 
-        NavigationView nav = findViewById(R.id.nav_view);
-        nav.setNavigationItemSelectedListener(this);
-    }
+        drawerLayout = findViewById(R.id.drawerLayout);
+        navigationView = findViewById(R.id.navigationView);
 
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
-        if (item.getItemId() == R.id.nav_add_money)
-            startActivity(new Intent(this, AddMoneyActivity.class));
-
-        else if (item.getItemId() == R.id.nav_send_money)
-            startActivity(new Intent(this, SendMoneyActivity.class));
-
-        else if (item.getItemId() == R.id.nav_logout) {
-            FirebaseAuth.getInstance().signOut();
-            startActivity(new Intent(this, LoginActivity.class));
-            finish();
+        // ✅ LOAD DEFAULT FRAGMENT (THIS WAS MISSING)
+        if (savedInstanceState == null) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragmentContainer, new DashboardFragment())
+                    .commit();
         }
-        return true;
+
+        // Drawer menu click handling
+        navigationView.setNavigationItemSelectedListener(item -> {
+
+            Fragment selectedFragment = null;
+
+            if (item.getItemId() == R.id.menu_dashboard) {
+                selectedFragment = new DashboardFragment();
+            }
+            else if (item.getItemId() == R.id.menu_profile) {
+                selectedFragment = new ProfileFragment();
+            }
+            else if (item.getItemId() == R.id.menu_logout) {
+                FirebaseAuth.getInstance().signOut();
+                startActivity(new Intent(this, LoginActivity.class));
+                finish();
+                return true;
+            }
+
+            if (selectedFragment != null) {
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.fragmentContainer, selectedFragment)
+                        .commit();
+            }
+
+            drawerLayout.closeDrawers();
+            return true;
+        });
     }
 }
