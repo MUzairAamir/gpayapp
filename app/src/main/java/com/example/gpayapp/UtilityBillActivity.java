@@ -1,8 +1,10 @@
 package com.example.gpayapp;
 
 import android.os.Bundle;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -15,10 +17,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class SendMoneyActivity extends AppCompatActivity {
+public class UtilityBillActivity extends AppCompatActivity {
 
-    EditText etAccount, etName, etAmount;
-    Button btnSend;
+    Spinner spinnerBill;
+    EditText etPSID, etAmount;
+    Button btnPay;
 
     FirebaseAuth auth;
     DatabaseReference userRef;
@@ -26,12 +29,21 @@ public class SendMoneyActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.send_money_activity);
+        setContentView(R.layout.activity_utility_bill);
 
-        etAccount = findViewById(R.id.etAccount);
-        etName = findViewById(R.id.etName);
+        spinnerBill = findViewById(R.id.spinnerType);
+        etPSID = findViewById(R.id.etPsid);
         etAmount = findViewById(R.id.etAmount);
-        btnSend = findViewById(R.id.btnSend);
+        btnPay = findViewById(R.id.btnPay);
+
+        // Spinner data
+        String[] bills = {"Electric", "Water", "Gas", "Internet"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                this,
+                android.R.layout.simple_spinner_dropdown_item,
+                bills
+        );
+        spinnerBill.setAdapter(adapter);
 
         auth = FirebaseAuth.getInstance();
 
@@ -45,26 +57,21 @@ public class SendMoneyActivity extends AppCompatActivity {
                 .getReference("users")
                 .child(auth.getCurrentUser().getUid());
 
-        btnSend.setOnClickListener(v -> sendMoney());
+        btnPay.setOnClickListener(v -> payBill());
     }
 
-    private void sendMoney() {
+    private void payBill() {
 
-        String acc = etAccount.getText().toString().trim();
-        String name = etName.getText().toString().trim();
+        String billType = spinnerBill.getSelectedItem().toString();
+        String psid = etPSID.getText().toString().trim();
         String amountStr = etAmount.getText().toString().trim();
 
-        if (acc.isEmpty() || name.isEmpty() || amountStr.isEmpty()) {
-            Toast.makeText(this, "Fill all fields", Toast.LENGTH_SHORT).show();
+        if (psid.length() != 11 || amountStr.isEmpty()) {
+            Toast.makeText(this, "Invalid PSID or amount", Toast.LENGTH_SHORT).show();
             return;
         }
 
         int amount = Integer.parseInt(amountStr);
-
-        if (amount <= 0) {
-            Toast.makeText(this, "Invalid amount", Toast.LENGTH_SHORT).show();
-            return;
-        }
 
         userRef.child("balance")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -75,7 +82,7 @@ public class SendMoneyActivity extends AppCompatActivity {
                         if (balance == null) balance = 0;
 
                         if (balance < amount) {
-                            Toast.makeText(SendMoneyActivity.this,
+                            Toast.makeText(UtilityBillActivity.this,
                                     "Not enough balance",
                                     Toast.LENGTH_SHORT).show();
                             return;
@@ -84,15 +91,13 @@ public class SendMoneyActivity extends AppCompatActivity {
                         int newBalance = balance - amount;
                         userRef.child("balance").setValue(newBalance);
 
-                        // Save transaction
-                        String txn = "Sent PKR " + amount +
-                                " to " + name +
-                                " (Acc: " + acc + ")";
+                        String txn = billType + " Bill Paid PKR " + amount +
+                                " (PSID: " + psid + ")";
 
                         userRef.child("transactions").push().setValue(txn);
 
-                        Toast.makeText(SendMoneyActivity.this,
-                                "Money sent successfully",
+                        Toast.makeText(UtilityBillActivity.this,
+                                "Bill Paid Successfully",
                                 Toast.LENGTH_SHORT).show();
 
                         finish();
@@ -100,7 +105,7 @@ public class SendMoneyActivity extends AppCompatActivity {
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
-                        Toast.makeText(SendMoneyActivity.this,
+                        Toast.makeText(UtilityBillActivity.this,
                                 error.getMessage(),
                                 Toast.LENGTH_SHORT).show();
                     }

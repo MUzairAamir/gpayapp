@@ -80,7 +80,6 @@ public class DashboardFragment extends Fragment {
         btnSendMoney.setOnClickListener(v ->
                 startActivity(new Intent(getActivity(), SendMoneyActivity.class))
         );
-
         btnTransactions.setOnClickListener(v ->
                 startActivity(new Intent(getActivity(), TransactionActivity.class))
         );

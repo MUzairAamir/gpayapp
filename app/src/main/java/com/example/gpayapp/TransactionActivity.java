@@ -1,54 +1,83 @@
 package com.example.gpayapp;
 
-
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.Button;
-import android.widget.EditText;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 
 public class TransactionActivity extends AppCompatActivity {
 
-    EditText etReceiverName, etReceiverAcc, etAmount;
-    Button btnSend;
+    ListView listView;
+    ArrayList<String> transactionList;
+    ArrayAdapter<String> adapter;
+
+    FirebaseAuth auth;
+    DatabaseReference transactionRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.transaction_activity);
+        listView = findViewById(R.id.listTransactions);
+        transactionList = new ArrayList<>();
+        adapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_list_item_1,
+                transactionList);
+        listView.setAdapter(adapter);
+        auth = FirebaseAuth.getInstance();
 
-        etReceiverName = findViewById(R.id.etReceiverName);
-        etReceiverAcc = findViewById(R.id.etReceiverAcc);
-        etAmount = findViewById(R.id.etAmount);
-        btnSend = findViewById(R.id.btnSend);
-
-        btnSend.setOnClickListener(v -> {
-
-            String name = etReceiverName.getText().toString();
-            String acc = etReceiverAcc.getText().toString();
-            String amtStr = etAmount.getText().toString();
-
-            if (name.isEmpty() || acc.isEmpty() || amtStr.isEmpty()) {
-                Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            int sendAmount = Integer.parseInt(amtStr);
-            int balance = SharedData.getBalance(this);
-
-            if (sendAmount > balance) {
-                Toast.makeText(this, "Not enough balance!", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            // Deduct balance
-            SharedData.saveBalance(this, balance - sendAmount);
-
-            Toast.makeText(this,
-                    "Sent PKR " + sendAmount + " to " + name,
-                    Toast.LENGTH_LONG).show();
-
+        if (auth.getCurrentUser() == null) {
+            Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show();
             finish();
+            return;
+        }
+
+        transactionRef = FirebaseDatabase.getInstance()
+                .getReference("users")
+                .child(auth.getCurrentUser().getUid())
+                .child("transactions");
+
+        loadTransactions();
+    }
+
+    private void loadTransactions() {
+
+        transactionRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                transactionList.clear();
+
+                if (!snapshot.exists()) {
+                    transactionList.add("No transactions yet");
+                } else {
+                    for (DataSnapshot ds : snapshot.getChildren()) {
+                        String txn = ds.getValue(String.class);
+                        transactionList.add(txn);
+                    }
+                }
+
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(TransactionActivity.this,
+                        error.getMessage(),
+                        Toast.LENGTH_SHORT).show();
+            }
         });
     }
 }

@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Move the uses-permission tag here -->
+    <uses-permission android:name="android.permission.CAMERA" />
 
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
 
     <application
         android:allowBackup="true"
@@ -15,33 +18,34 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Gpayapp">
         <activity
-            android:name=".QRScanActivity"
+            android:name=".UtilityBillActivity"
             android:exported="false" />
+        <activity
+            android:name=".QRScanActivity"
+            android:exported="false" /> <!-- Optional main screen -->
+        <activity
+            android:name=".QRScanActivity"
+            android:exported="false"
+            tools:ignore="DuplicateActivity" />
         <activity
             android:name=".SendMoneyActivity"
             android:exported="false" />
-        <activity
-            android:name=".AddMoneyActivity"
-             />
+        <activity android:name=".AddMoneyActivity" />
         <activity
             android:name=".TransactionActivity"
             android:exported="false" />
         <activity
             android:name=".MainDrawerActivity"
-            android:exported="true"/>
-
-        <!-- Splash Screen (Launcher) -->
+            android:exported="true" /> <!-- Splash Screen (Launcher) -->
         <activity
             android:name=".SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <!-- Other Activities -->
-
-
+        </activity> <!-- Other Activities -->
         <activity
             android:name=".SignupActivity"
             android:exported="false" />
@@ -66,20 +70,9 @@
         <activity
             android:name=".ShowDetailsActivity"
             android:exported="false" />
-
-        <!-- Optional main screen -->
-        <activity
-            android:name=".QRScanActivity"
-            android:exported="false"
-            tools:ignore="DuplicateActivity" />
         <activity
             android:name=".MainActivity"
             android:exported="true" />
     </application>
-    <uses-permission android:name="android.permission.CAMERA" />
-
-    <uses-feature
-        android:name="android.hardware.camera"
-        android:required="false" />
 
 </manifest>
