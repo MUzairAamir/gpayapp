@@ -11,7 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -24,6 +25,7 @@ public class DashboardFragment extends Fragment {
     TextView tvBalance;
     Button btnAddMoney, btnSendMoney, btnTransactions,
             btnUtility, btnQRScan, btnChatbot;
+    AdView adView;
 
     FirebaseAuth auth;
     DatabaseReference balanceRef;
@@ -46,6 +48,10 @@ public class DashboardFragment extends Fragment {
         btnUtility = view.findViewById(R.id.btnUtility);
         btnQRScan = view.findViewById(R.id.btnQRScan);
         btnChatbot = view.findViewById(R.id.btnChatbot);
+        adView = view.findViewById(R.id.adView);
+
+        AdRequest adRequest = new AdRequest.Builder().build();
+        adView.loadAd(adRequest);
 
         // Firebase
         auth = FirebaseAuth.getInstance();

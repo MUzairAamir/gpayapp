@@ -48,4 +48,5 @@ dependencies {
     androidTestImplementation(libs.espresso.core)
     implementation("com.google.firebase:firebase-database:21.0.0")
     implementation ("com.journeyapps:zxing-android-embedded:4.3.0")
+    implementation("com.google.android.gms:play-services-ads:23.0.0")
 }

@@ -5,61 +5,47 @@ import android.os.Bundle;
 import android.app.AlertDialog;
 import android.database.Cursor;
 import android.widget.Button;
+import com.google.android.gms.ads.MobileAds;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.interstitial.InterstitialAd;
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 
 public class MainActivity extends AppCompatActivity {
 
-    DBHelper db;
-    Button insert, view, update, delete;
+
+    InterstitialAd mInterstitialAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        db = new DBHelper(this);
-
-        insert = findViewById(R.id.btnInsert);
-        view = findViewById(R.id.btnView);
-        update = findViewById(R.id.btnUpdate);
-        delete = findViewById(R.id.btnDelete);
-
-        insert.setOnClickListener(v -> {
-            boolean res = db.insertStudent(
-                    "L22FBSCS0110",
-                    "Ali",
-                    "ali@gmail.com",
-                    "1234",
-                    21
-            );
-            showMessage("Insert", res ? "Student record is saved" : "Insert failed");
+        MobileAds.initialize(this, initializationStatus -> {
         });
+        AdRequest adRequest = new AdRequest.Builder().build();
 
-        view.setOnClickListener(v -> {
-            ViewFragment fragment = new ViewFragment();
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.fragmentContainer, fragment);
-            ft.commit();
-        });
+        InterstitialAd.load(this,
+                "ca-app-pub-3940256099942544/1033173712",
+                adRequest,
+                new InterstitialAdLoadCallback() {
+                    @Override
+                    public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
+                        mInterstitialAd = interstitialAd;
+                    }
 
-        update.setOnClickListener(v -> {
-            boolean res = db.updateStudent("L22FBSCS0110", "Ali Updated", 22);
-            showMessage("Update", res ? "Student Updated" : "Student not found");
-        });
+                    @Override
+                    public void onAdFailedToLoad(@NonNull LoadAdError adError) {
+                        mInterstitialAd = null;
+                    }
+                });
+        if (mInterstitialAd != null) {
+            mInterstitialAd.show(this);
+        }
 
-        delete.setOnClickListener(v -> {
-            boolean res = db.deleteStudent("L22FBSCS0110");
-            showMessage("Delete", res ? "User is deleted" : "Student not found");
-        });
-    }
-
-    void showMessage(String title, String msg) {
-        new AlertDialog.Builder(this)
-                .setTitle(title)
-                .setMessage(msg)
-                .setCancelable(true)
-                .show();
     }
 }
