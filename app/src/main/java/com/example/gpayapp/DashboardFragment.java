@@ -1,7 +1,10 @@
 package com.example.gpayapp;
+
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.fragment.app.Fragment;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +14,7 @@ import android.widget.TextView;
 public class DashboardFragment extends Fragment {
 
     TextView tvBalance;
-    Button btnAddMoney, btnSendMoney, btnTransactions;
+    Button btnAddMoney, btnSendMoney, btnTransactions, btnQRScan;
 
     public DashboardFragment() {}
 
@@ -25,22 +28,28 @@ public class DashboardFragment extends Fragment {
         btnAddMoney = view.findViewById(R.id.btnAddMoney);
         btnSendMoney = view.findViewById(R.id.btnSendMoney);
         btnTransactions = view.findViewById(R.id.btnTransactions);
+        btnQRScan = view.findViewById(R.id.btnQRScan);
 
         // Load saved balance
         int balance = SharedData.getBalance(requireContext());
         tvBalance.setText("Current Balance: PKR " + balance);
 
-        btnAddMoney.setOnClickListener(v -> {
-            startActivity(new Intent(getActivity(), AddMoneyActivity.class));
-        });
+        btnAddMoney.setOnClickListener(v ->
+                startActivity(new Intent(getActivity(), AddMoneyActivity.class))
+        );
 
-        btnSendMoney.setOnClickListener(v -> {
-            startActivity(new Intent(getActivity(), SendMoneyActivity.class));
-        });
+        btnSendMoney.setOnClickListener(v ->
+                startActivity(new Intent(getActivity(), SendMoneyActivity.class))
+        );
 
-        btnTransactions.setOnClickListener(v -> {
-            startActivity(new Intent(getActivity(), TransactionActivity.class));
-        });
+        btnTransactions.setOnClickListener(v ->
+                startActivity(new Intent(getActivity(), TransactionActivity.class))
+        );
+
+        // ✅ QR Code Scanner
+        btnQRScan.setOnClickListener(v ->
+                startActivity(new Intent(getActivity(), QRScanActivity.class))
+        );
 
         return view;
     }

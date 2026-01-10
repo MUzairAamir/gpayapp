@@ -45,5 +45,11 @@
         android:textColor="#000000"
         android:padding="15dp"
         android:layout_height="wrap_content" />
+    <Button
+        android:id="@+id/btnQRScan"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Scan QR Code"
+        android:layout_marginTop="12dp"/>
 
 </LinearLayout>
