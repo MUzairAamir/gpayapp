@@ -2,6 +2,7 @@ package com.example.gpayapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
@@ -21,7 +22,8 @@ import com.google.firebase.database.ValueEventListener;
 public class DashboardFragment extends Fragment {
 
     TextView tvBalance;
-    Button btnAddMoney, btnSendMoney, btnTransactions, btnUtility, btnQRScan;
+    Button btnAddMoney, btnSendMoney, btnTransactions,
+            btnUtility, btnQRScan, btnChatbot;
 
     FirebaseAuth auth;
     DatabaseReference balanceRef;
@@ -36,13 +38,14 @@ public class DashboardFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.dashboard_fragment, container, false);
 
-        // Bind UI
+        // UI binding
         tvBalance = view.findViewById(R.id.tvBalance);
         btnAddMoney = view.findViewById(R.id.btnAddMoney);
         btnSendMoney = view.findViewById(R.id.btnSendMoney);
         btnTransactions = view.findViewById(R.id.btnTransactions);
         btnUtility = view.findViewById(R.id.btnUtility);
         btnQRScan = view.findViewById(R.id.btnQRScan);
+        btnChatbot = view.findViewById(R.id.btnChatbot);
 
         // Firebase
         auth = FirebaseAuth.getInstance();
@@ -53,7 +56,7 @@ public class DashboardFragment extends Fragment {
                     .child(auth.getCurrentUser().getUid())
                     .child("balance");
 
-            // Real-time balance
+            // Real-time balance listener
             balanceRef.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -72,7 +75,7 @@ public class DashboardFragment extends Fragment {
             });
         }
 
-        // Button actions
+        // Button clicks
         btnAddMoney.setOnClickListener(v ->
                 startActivity(new Intent(getActivity(), AddMoneyActivity.class))
         );
@@ -80,6 +83,7 @@ public class DashboardFragment extends Fragment {
         btnSendMoney.setOnClickListener(v ->
                 startActivity(new Intent(getActivity(), SendMoneyActivity.class))
         );
+
         btnTransactions.setOnClickListener(v ->
                 startActivity(new Intent(getActivity(), TransactionActivity.class))
         );
@@ -90,6 +94,11 @@ public class DashboardFragment extends Fragment {
 
         btnQRScan.setOnClickListener(v ->
                 startActivity(new Intent(getActivity(), QRScanActivity.class))
+        );
+
+        // 🤖 AI Chatbot
+        btnChatbot.setOnClickListener(v ->
+                startActivity(new Intent(getActivity(), ChatbotActivity.class))
         );
 
         return view;
