@@ -1,5 +1,7 @@
 package com.example.gpayapp;
 
+import static com.example.gpayapp.R.id.btnChat;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -24,7 +26,7 @@ public class DashboardFragment extends Fragment {
 
     TextView tvBalance;
     Button btnAddMoney, btnSendMoney, btnTransactions,
-            btnUtility, btnQRScan, btnChatbot;
+            btnUtility, btnQRScan, btnChatbot,btnChat;
     AdView adView;
 
     FirebaseAuth auth;
@@ -34,6 +36,7 @@ public class DashboardFragment extends Fragment {
         // Required empty public constructor
     }
 
+    @SuppressLint("MissingInflatedId")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -46,9 +49,11 @@ public class DashboardFragment extends Fragment {
         btnSendMoney = view.findViewById(R.id.btnSendMoney);
         btnTransactions = view.findViewById(R.id.btnTransactions);
         btnUtility = view.findViewById(R.id.btnUtility);
+        btnChat = view.findViewById(R.id.btnChat);
         btnQRScan = view.findViewById(R.id.btnQRScan);
         btnChatbot = view.findViewById(R.id.btnChatbot);
         adView = view.findViewById(R.id.adView);
+
 
         AdRequest adRequest = new AdRequest.Builder().build();
         adView.loadAd(adRequest);
@@ -106,6 +111,12 @@ public class DashboardFragment extends Fragment {
         btnChatbot.setOnClickListener(v ->
                 startActivity(new Intent(getActivity(), ChatbotActivity.class))
         );
+        btnChat.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), ChatActivity.class);
+            intent.putExtra("receiverId", "SUPPORT");
+            startActivity(intent);
+        });
+
 
         return view;
     }
